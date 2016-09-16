@@ -6,7 +6,7 @@
 /*   By: jpepin <jpepin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 10:18:26 by jpepin            #+#    #+#             */
-/*   Updated: 2016/09/15 12:39:10 by jpepin           ###   ########.fr       */
+/*   Updated: 2016/09/16 10:13:12 by jpepin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,27 +29,29 @@ static int (*(get_fds)(char **argv, t_term *coucou))[8]
   i = 0;
   BZE(fds, 8 * sizeof(int));
   while (argv[i])
-  { if ((fd = open(argv[i], O_RDWR)) > 2)
+  { if (!*(argv[i]))
+    { argv[i] = NULL;
+      stift_warning(EmptyName, NULL); }
+    else if ((fd = open(argv[i], O_RDWR)) > 2)
     { if (coucou->nb_wind == 8)
       { close(fd);
         stift_warning(TooMuchWindows, "./Code-stift"); 
         break ; }
       fds[coucou->nb_wind] = fd;
-      printf("name::%s, fds[%d]::%d\n", argv[i], coucou->nb_wind, fd);
       coucou->nb_wind += 1; }
     else if (lstat(argv[i], &sb) != -1)
     { if (!ISDIR)
       { stift_warning(Access, argv[i]); }
       else
-      { ; /* GET_DIRECTORY AVEC FT_SELECT (USAGE DE FORK & EXECVE) */ }}
+      { ; /* GET_DIRECTORY AVEC FT_SELECT (USAGE DE FORK & EXECVE) */ }
+      argv[i] = NULL; }
     else if (fd < 0)
-    { stift_warning(MissingFile, argv[i]); }
+    { stift_warning(MissingFile, argv[i]);
+      argv[i] = NULL; }
     else
-    { stift_warning(TermEdit, argv[i]); }
-    argv[i] = NULL;
+    { stift_warning(TermEdit, argv[i]);
+      argv[i] = NULL; }
     i += 1; }
-  if (!(coucou->nb_wind))
-  { stift_error(NoInputFile, "./stift"); }
   return (&fds); }
 
 static t_catch *new_catch(char *line)
@@ -77,7 +79,7 @@ static t_wind *new_wind(int fd, char *name)
   *stock = NULL;
   while (get_next_line(fd, &line))
   { if (LEN(line) > (size_t)new->info[0])
-    { new->info[0] = LEN(line) + 1; }
+    { new->info[0] = LEN(line); }
     new->info[1] += 1;
     if (*stock)
     { tmp->next = new_catch(line);
@@ -85,11 +87,13 @@ static t_wind *new_wind(int fd, char *name)
     else
     { tmp = new_catch(line);
       *stock = tmp; }}
+  new->info[0] = new->info[0] < 100 ? 100 : new->info[0];
+  new->info[1] = new->info[1] < 84 ? 84 : new->info[1];
   new->matrix = matrix_init(new->info);
-  i = 0;
+  i = 3;
   tmp = *stock;
   while (tmp)
-  { j = 0;
+  { j = 2;
     while (tmp->line[j])
     { new->matrix[i][j].c = tmp->line[j];
       j += 1; }
@@ -101,6 +105,8 @@ void wind_init(char **argv, t_term *coucou)
 { int i;
   static int (*fds)[8];
   fds = get_fds(argv, coucou);
+  if (!(coucou->nb_wind))
+  { stift_error(NoInputFile, "./stift"); }
   if (!((coucou->wind = (t_wind**)malloc(sizeof(t_wind*) * (coucou->nb_wind + 1)))))
   { stift_error(Malloc, "coucou->wind in wind_init"); }
   i = 0;
@@ -108,4 +114,12 @@ void wind_init(char **argv, t_term *coucou)
   { while (argv && !(*argv))
     { argv++; }
     coucou->wind[i] = new_wind((*fds)[i], *argv);
-    i += 1; }}
+    WIND[i]->wind[4] = TERM[0];
+    WIND[i]->wind[5] = TERM[1] / coucou->nb_wind;
+    WIND[i]->wind[1] = i * WIND[i]->wind[5];
+    WIND[i]->wind[3] = WIND[i]->wind[1];
+//    if (i + 1 == coucou->nb_wind && TERM[1] % coucou->nb_wind != 0)
+//    { WIND[i]->wind[5] += 1; }
+    printf("WIND! name[%d]::%s, x_t::%d, y_t::%d, x_m::%d, y_m::%d, s_x::%d, s_y::%d\n", i, WIND[i]->name, WIND[i]->wind[0], WIND[i]->wind[1], WIND[i]->wind[2], WIND[i]->wind[3], WIND[i]->wind[4], WIND[i]->wind[5]);
+    i += 1; }
+  coucou->wind[i] = NULL; }

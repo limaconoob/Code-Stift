@@ -6,7 +6,7 @@
 /*   By: jpepin <jpepin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/24 13:41:51 by jpepin            #+#    #+#             */
-/*   Updated: 2016/09/15 12:13:29 by jpepin           ###   ########.fr       */
+/*   Updated: 2016/09/16 08:14:12 by jpepin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ void			stift_error(int type, char *prob)
 		msg(": Kein Datei oder Ordner", EX_OSFILE);
 	else if (type == Access)
 		msg(": Zugang ist verboten", EX_NOPERM);
-	//else if (type == MissingArgument)
-//		msg(": Brauch Argumente", EX_USAGE);
+	else if (type == Option)
+  { ft_putendl_fd(": Schlecht Argumente", 2);
+		msg("Benutzung : ./Code-Stift [-] [file ...]", EX_USAGE); }
 	else if (type == Malloc)
 		msg(": Malloc dürft nicht Gedächtnis zu behalten", EX_OSERR);
 	else if (type == TermInit)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   select.h                                           :+:      :+:    :+:   */
+/*   stift.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpepin <jpepin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/31 01:39:01 by jpepin            #+#    #+#             */
-/*   Updated: 2016/09/15 12:16:22 by jpepin           ###   ########.fr       */
+/*   Updated: 2016/09/16 09:59:09 by jpepin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,8 @@ typedef enum e_error
 { Malloc = 0x00,                    //Mémoire dynamique insuffisante
   Option = 0x01,                    //Mauvaise Option
   TermInit = 0x02,                  //Contrôle du terminal compromis
- //----------    /! A VOIR /!
+
   NoInputFile = 0x04,               //Aucun fichier à éditer transmis
- //-----------   /! A VOIR /!
 } t_error;
 ///3
 
@@ -96,6 +95,7 @@ typedef enum e_warning
   Access = 0x01,                    //Fichier interdit d'accès
   TooMuchWindows = 0x02,            //Trop de fenêtres ouvertes en même temps
   TermEdit = 0x04,                  //Tentative d'éditer le terminal
+  EmptyName = 0x08,                 //Nom de fichier vide
 } t_warning;
 ///3
 
@@ -125,7 +125,8 @@ typedef struct s_wind
   t_tab **matrix;                   //Matrice de caractères du terminal
   int info[2];                      //Taille de la matrice
   int wind[6];                      //Coordonnées de la fenêtre :
-                                    //(0, 1): dans le terminal ; (2, 3): dans la matrice
+                                    //(0, 1): dans le terminal
+                                    //(2, 3): dans la matrice
                                     //(4, 5): taille
   int slide[3];                     //(0, 1): coordonnées du slide dans la matrice
                                     //2: Longueur
@@ -138,9 +139,11 @@ typedef struct s_wind
 // FEATURE::Terminal en 3D
 typedef struct s_term
 { int curs[4];                      //Coordonnées du curseur :
-                                    //(0, 1): dans le terminal ; (2, 3): dans la matrice
+                                    //(0, 1): dans le terminal
+                                    //(2, 3): dans la matrice
   int mous[5];                      //Coordonnées de la souris :
-                                    //(0, 1): dans le terminal ; (2, 3): dans la matrice
+                                    //(0, 1): dans le terminal
+                                    //(2, 3): dans la matrice
                                     //4: Bouton enfoncé
   int term[2];                      //Taille du terminal
   t_wind **wind;                    //Fenêtres stockées (même celles suspendues)

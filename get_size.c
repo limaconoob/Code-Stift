@@ -6,11 +6,11 @@
 /*   By: jpepin <jpepin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/01 05:32:17 by jpepin            #+#    #+#             */
-/*   Updated: 2016/09/12 04:45:12 by jpepin           ###   ########.fr       */
+/*   Updated: 2016/09/16 10:09:42 by jpepin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "select.h"
+#include "stift.h"
 #include <stdlib.h>
 
 void get_size(int x, int y, t_term *term)

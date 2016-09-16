@@ -6,7 +6,7 @@
 /*   By: jpepin <jpepin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/12 09:26:06 by jpepin            #+#    #+#             */
-/*   Updated: 2016/09/15 12:15:25 by jpepin           ###   ########.fr       */
+/*   Updated: 2016/09/16 10:09:17 by jpepin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_term *coucou_init(char **argv)
   coucou_clear(coucou);
   if (ioctl(0, TIOCGWINSZ, &w) == -1)
   { stift_error(TermInit, "TermKappa"); }
-//  get_size(w.ws_col, w.ws_row, NULL);
-//  get_size(-1, 0, coucou);
+  get_size(w.ws_col, w.ws_row, NULL);
+  get_size(-1, 0, coucou);
   ft_tri(&(argv[1]));
   return (coucou); }
